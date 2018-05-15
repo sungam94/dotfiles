@@ -1,9 +1,9 @@
 [user]
-  name = GITHUBFULLNAME
-  email = GITHUBEMAIL
+  name = Magnus Kaffenberger
+  email = magnus.kaffenberger@gmail.com
 [github]
   # https://github.com/blog/180-local-github-config
-  user = GITHUBUSER
+  user = sungam94
 [color]
 # ui = true is a superset of all the more specific color options
 #  as documented at http://book.git-scm.com/5_customizing_git.html
@@ -155,8 +155,9 @@
   #Enable the recording of resolved conflicts, so that identical hunks can be resolved automatically later on
   enabled = 1
 
-[difftool]
-  prompt = false
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 
 [diff]
   tool = vimdiff
@@ -164,9 +165,9 @@
 [init]
   templatedir = ~/.dotfiles/.git_template
 
-[mergetool]
-  prompt = false
-  keepBackup = false
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 
 [merge]
   tool = vimdiff
@@ -180,7 +181,8 @@
 
 [credential]
     # cache creds (git help credential-cache)
-  helper = cache
+  # helper = cache
+  helper = osxkeychain
 
 [filter "tabspace"]
   clean = expand -t 4
