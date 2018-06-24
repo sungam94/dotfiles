@@ -867,9 +867,9 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 136 599 459 0 0 1680 1027 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>489 485 918 512 0 0 1680 1027 </string>
+	<string>622 626 796 473 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1642 692 0 0 1680 1027 </string>
+	<string>0 4 1920 396 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>76 476 1346 477 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -2036,6 +2036,8 @@
 		<string>0015</string>
 		<string>0016</string>
 	</array>
+	<key>NoSyncTurnOffFocusReportingOnHostChange</key>
+	<false/>
 	<key>Non Ascii Font</key>
 	<string>RobotoMonoForPowerline-Regular 12</string>
 	<key>Normal Font</key>
@@ -2096,7 +2098,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-05-13T14:36:56Z</date>
+	<date>2018-06-23T20:33:39Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
