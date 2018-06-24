@@ -325,6 +325,10 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   )
 
+  ;; Scrolling
+  (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
+  (setq mouse-wheel-progressive-speed nil)
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables

@@ -49,6 +49,7 @@ module.exports = {
     // 'box-sync',
     //'comicbooklover',
     'diffmerge',
+    'flux'
     // 'dropbox',
     //'evernote',
     'gpgtools',
@@ -57,6 +58,8 @@ module.exports = {
     'little-snitch',
     // 'micro-snitch',
     //'macvim',
+	'qlmarkdown',
+	'qlstephen',
     // 'sizeup',
     //'sketchup',
     'slack',

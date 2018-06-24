@@ -57,9 +57,9 @@ source $(dirname $(gem which colorls))/tab_complete.sh
 
 
 # PATH
-export EDITOR='subl -w'
-# export PYTHONPATH=$PYTHONPATH
-# export MANPATH="/usr/local/man:$MANPATH"
+export EDITOR='atom -w'
+export PYTHONPATH=$PYTHONPATH
+export MANPATH="/usr/local/man:$MANPATH"
 
 # Virtual Environment
 # export WORKON_HOME=$HOME/.virtualenvs
@@ -80,10 +80,12 @@ function mkcd() { mkdir -p "$@" && cd "$_"; }
 # Aliases
 alias cppcompile='c++ -std=c++11 -stdlib=libc++'
 
-# Use sublimetext for editing config files
-alias preztoconfig="subl ~/.zpreztorc"
-alias zshconfig="subl ~/.zshrc"
-# alias envconfig="subl ~/projects/config/env.sh"
+
+# Use atomimetext for editing config files
+alias preztoconfig="atom ~/.zpreztorc"
+alias zshconfig="atom ~/.zshrc"
+# alias envconfig="atom ~/projects/config/env.sh"
 
 # Syntax Highlighting
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export PATH="/usr/local/opt/sphinx-doc/bin:$PATH"
