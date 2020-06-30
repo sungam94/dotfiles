@@ -1,4 +1,4 @@
-;; - * -mode:emacs - lisp lexical - binding : t - *-
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -26,8 +26,7 @@ This function should only modify configuration layer settings."
     ;; a layer lazily. (default t)
     dotspacemacs-ask-for-lazy-installation t
 
-    ;; If non-nil layers with lazy install support are lazy installed.
-    ;; List of additional paths where to look for configuration layers.
+    ;;  List of additional paths where to look for configuration layers.
     ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
     dotspacemacs-configuration-layer-path '()
 
@@ -51,7 +50,7 @@ This function should only modify configuration layer settings."
        helm
        ;; ipython-notebook
        ;; javascript
-       ;; (julia :variables julia-backend 'lsp)
+       (julia :variables julia-backend 'lsp)
        (latex :variables latex-enable-folding t
          latex-build-command "LatexMk"
          )
@@ -81,21 +80,22 @@ This function should only modify configuration layer settings."
     ;; '(your-package :location "~/path/to/your-package/")
     ;; Also include the dependencies as they will not be resolved automatically.
     dotspacemacs-additional-packages '(
-                                        ;; color-theme-sanityinc-tomorrow
                                         auctex-latexmk
-                                        writeroom-mode
+                                        ;; color-theme-sanityinc-tomorrow
+                                        ;; elpy
+                                        exec-path-from-shell
+                                        ;; helm-bibtex
                                         (languagetool :variables
                                           langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"
                                           langtool-language-tool-jar "/Applications/TeX/LanguageTool-3.6/languagetool-commandline.jar"
                                           langtool-language-tool-server-jar "/Applications/TeX/LanguageTool-3.6/languagetool-server.jar"
                                           langtool-server-user-arguments '("-p" "8082"))
-                                        ;; elpy
-                                        exec-path-from-shell
-                                        helm-bibtex
+                                        org-bullets
                                         posframe
                                         ;; processing-mode
-                                        ;; zotxt
+                                        writeroom-mode
                                         xwidget
+                                        ;; zotxt
                                         )
 
     ;; A list of packages that cannot be updated.
@@ -121,57 +121,64 @@ It should only modify the values of Spacemacs settings."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-    ;; If non-nil then enable support for the portable dumper. You'll need
-    ;; to compile Emacs 27 from source following the instructions in file
-    ;; EXPERIMENTAL.org at to root of the git repository.
-    ;; (default nil)
-    dotspacemacs-enable-emacs-pdumper nil
+   ;; If non-nil then enable support for the portable dumper. You'll need
+   ;; to compile Emacs 27 from source following the instructions in file
+   ;; EXPERIMENTAL.org at to root of the git repository.
+   ;; (default nil)
+   dotspacemacs-enable-emacs-pdumper nil
 
-    ;; File path pointing to emacs 27.1 executable compiled with support
-    ;; for the portable dumper (this is currently the branch pdumper).
-    ;; (default "emacs-27.0.50")
-    dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+   ;; Name of executable file pointing to emacs 27+. This executable must be
+   ;; in your PATH.
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
 
-    ;; Name of the Spacemacs dump file. This is the file will be created by the
-    ;; portable dumper in the cache directory under dumps sub-directory.
-    ;; To load it when starting Emacs add the parameter `--dump-file'
-    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-    ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-    ;; (default spacemacs.pdmp)
-    dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;; Name of the Spacemacs dump file. This is the file will be created by the
+   ;; portable dumper in the cache directory under dumps sub-directory.
+   ;; To load it when starting Emacs add the parameter `--dump-file'
+   ;; when invoking Emacs 27.1 executable on the command line, for instance:
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default spacemacs-27.1.pdmp)
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
-    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
-    ;; possible. Set it to nil if you have no way to use HTTPS in your
-    ;; environment, otherwise it is strongly recommended to let it set to t.
-    ;; This variable has no effect if Emacs is launched with the parameter
-    ;; `--insecure' which forces the value of this variable to nil.
-    ;; (default t)
-    dotspacemacs-elpa-https t
+   ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
+   ;; possible. Set it to nil if you have no way to use HTTPS in your
+   ;; environment, otherwise it is strongly recommended to let it set to t.
+   ;; This variable has no effect if Emacs is launched with the parameter
+   ;; `--insecure' which forces the value of this variable to nil.
+   ;; (default t)
+   dotspacemacs-elpa-https t
 
-    ;; Maximum allowed time in seconds to contact an ELPA repository.
-    ;; (default 5)
-    dotspacemacs-elpa-timeout 5
+   ;; Maximum allowed time in seconds to contact an ELPA repository.
+   ;; (default 5)
+   dotspacemacs-elpa-timeout 5
 
-    ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
-    ;; This is an advanced option and should not be changed unless you suspect
-    ;; performance issues due to garbage collection operations.
-    ;; (default '(100000000 0.1))
-    dotspacemacs-gc-cons '(100000000 0.1)
+   ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
+   ;; This is an advanced option and should not be changed unless you suspect
+   ;; performance issues due to garbage collection operations.
+   ;; (default '(100000000 0.1))
+   dotspacemacs-gc-cons '(100000000 0.1)
 
-    ;; If non-nil then Spacelpa repository is the primary source to install
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 1024 1024)
+
+   ;;If non-nil then Spacelpa repository is the primary source to install
     ;; a locked version of packages. If nil then Spacemacs will install the
     ;; latest version of packages from MELPA. (default nil)
     dotspacemacs-use-spacelpa nil
 
     ;; If non-nil then verify the signature for downloaded Spacelpa archives.
-    ;; (default nil)
-    dotspacemacs-verify-spacelpa-archives nil
+    ;; (default t)
+    dotspacemacs-verify-spacelpa-archives t
 
     ;; If non-nil then spacemacs will check for updates at startup
     ;; when the current branch is not `develop'. Note that checking for
     ;; new versions works via git commands, thus it calls GitHub services
     ;; whenever you start Emacs. (default nil)
-    dotspacemacs-check-for-update t
+    dotspacemacs-check-for-update nil
 
     ;; If non-nil, a form that evaluates to a package directory. For example, to
     ;; use different package directories for different Emacs versions, set this
@@ -186,8 +193,10 @@ It should only modify the values of Spacemacs settings."
     ;; (default 'vim)
     dotspacemacs-editing-style 'vim
 
-    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
-    dotspacemacs-verbose-loading nil
+    ;; If non-nil show the version string in the Spacemacs buffer. It will
+    ;; appear as (spacemacs version)@(emacs version)
+    ;; (default t)
+    dotspacemacs-startup-buffer-show-version t
 
     ;; Specify the startup banner. Default value is `official', it displays
     ;; the official spacemacs logo. An integer value is the index of text
@@ -207,11 +216,20 @@ It should only modify the values of Spacemacs settings."
                                   (recents . 5)
                                   (projects . 7))
 
-    ;; True if the home buffer should respond to resize events. (default t)
-    dotspacemacs-startup-buffer-responsive t
+   ;; True if the home buffer should respond to resize events. (default t)
+   dotspacemacs-startup-buffer-responsive t
 
-    ;; Default major mode of the scratch buffer (default `text-mode')
-    dotspacemacs-scratch-mode 'text-mode
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
+
+   ;; Default major mode of the scratch buffer (default `text-mode')
+   dotspacemacs-scratch-mode 'text-mode
+
+   ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
+   ;; (default nil)
+   dotspacemacs-initial-scratch-message nil
 
     ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
     ;; (default nil)
@@ -237,8 +255,7 @@ It should only modify the values of Spacemacs settings."
     ;; (default t)
     dotspacemacs-colorize-cursor-according-to-state t
 
-    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
-    ;; quickly tweak the mode-line size to make separators look not too crappy.
+    ;; Default font or prioritized list of fonts.
     dotspacemacs-default-font '("Hack Nerd Font"
                                  :size 14
                                  :weight normal
@@ -263,8 +280,10 @@ It should only modify the values of Spacemacs settings."
     dotspacemacs-major-mode-leader-key ","
 
     ;; Major mode leader key accessible in `emacs state' and `insert state'.
-    ;; (default "C-M-m")
-    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+    ;; (default "C-M-m "for terminal mode, "<M-return>" for GUI mode).
+    ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+    ;;C-M-m also should work in terminal mode, but not in GUI mode.
+    dotspacemacs-major-mode-emacs-leader-key (if window-system"<M-return>" "C-M-m")
 
     ;; These variables control whether separate commands are bound in the GUI to
     ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
@@ -341,48 +360,87 @@ It should only modify the values of Spacemacs settings."
     ;; If non-nil the frame is maximized when Emacs starts up.
     ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
     ;; (default nil) (Emacs 24.4+ only)
-    dotspacemacs-maximized-at-startup t
+    dotspacemacs-maximized-at-startup nil
 
-    ;; A value from the range (0..100), in increasing opacity, which describes
-    ;; the transparency level of a frame when it's active or selected.
-    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-    dotspacemacs-active-transparency 90
+   ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
+   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
+   ;; borderless fullscreen. (default nil)
+   dotspacemacs-undecorated-at-startup nil
 
-    ;; A value from the range (0..100), in increasing opacity, which describes
-    ;; the transparency level of a frame when it's inactive or deselected.
-    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-    dotspacemacs-inactive-transparency 90
+   ;; A value from the range (0..100), in increasing opacity, which describes
+   ;; the transparency level of a frame when it's active or selected.
+   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
+   dotspacemacs-active-transparency 90
 
-    ;; If non-nil show the titles of transient states. (default t)
-    dotspacemacs-show-transient-state-title t
+   ;; A value from the range (0..100), in increasing opacity, which describes
+   ;; the transparency level of a frame when it's inactive or deselected.
+   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
+   dotspacemacs-inactive-transparency 90
 
-    ;; If non-nil show the color guide hint for transient state keys. (default t)
-    dotspacemacs-show-transient-state-color-guide t
+   ;; If non-nil show the titles of transient states. (default t)
+   dotspacemacs-show-transient-state-title t
 
-    ;; If non-nil unicode symbols are displayed in the mode line.
-    ;; If you use Emacs as a daemon and wants unicode characters only in GUI set
-    ;; the value to quoted `display-graphic-p'. (default t)
-    dotspacemacs-mode-line-unicode-symbols t
+   ;; If non-nil show the color guide hint for transient state keys. (default t)
+   dotspacemacs-show-transient-state-color-guide t
 
-    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
-    ;; scrolling overrides the default behavior of Emacs which recenters point
-    ;; when it reaches the top or bottom of the screen. (default t)
-    dotspacemacs-smooth-scrolling t
+   ;; If non-nil unicode symbols are displayed in the mode line.
+   ;; If you use Emacs as a daemon and wants unicode characters only in GUI set
+   ;; the value to quoted `display-graphic-p'. (default t)
+   dotspacemacs-mode-line-unicode-symbols t
 
-    ;; Control line numbers activation.
-    ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-    ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
-    ;; This variable can also be set to a property list for finer control:
-    ;; '(:relative nil
-    ;;   :disabled-for-modes dired-mode
-    ;;                       doc-view-mode
-    ;;                       markdown-mode
-    ;;                       org-mode
-    ;;                       pdf-view-mode
-    ;;                       text-mode
-    ;;   :size-limit-kb 1000)
-    ;; (default nil)
-    dotspacemacs-line-numbers t
+   ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
+   ;; scrolling overrides the default behavior of Emacs which recenters point
+   ;; when it reaches the top or bottom of the screen. (default t)
+   dotspacemacs-smooth-scrolling t
+
+   ;; Control line numbers activation.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but lines are only visual lines are counted. For example, folded lines
+   ;; will not be counted and wrapped lines are counted as multiple lines.
+   ;; This variable can also be set to a property list for finer control:
+   ;; '(:relative nil
+   ;;   :visual nil
+   ;;   :disabled-for-modes dired-mode
+   ;;                       doc-view-mode
+   ;;                       markdown-mode
+   ;;                       org-mode
+   ;;                       pdf-view-mode
+   ;;                       text-mode
+   ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
+   ;; (default nil)
+   dotspacemacs-line-numbers nil
+
+   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; (default 'evil)
+   dotspacemacs-folding-method 'evil
+
+   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; (default nil)
+   dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
+   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
+   dotspacemacs-smart-closing-parenthesis nil
+
+   ;; Select a scope to highlight delimiters. Possible values are `any',
+   ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
+   ;; emphasis the current one). (default 'all)
+   dotspacemacs-highlight-delimiters 'all
+
+   ;; If non-nil, start an Emacs server if one is not already running.
+   ;; (default nil)
+   dotspacemacs-enable-server nil
+
+   ;; Set the emacs server socket location.
+   ;; If nil, uses whatever the Emacs default is, otherwise a directory path
+   ;; like \"~/.emacs.d/server\". It has no effect if
+   ;; `dotspacemacs-enable-server' is nil.
+   ;; (default nil)
+   dotspacemacs-server-socket-dir nil
 
     ;; Code folding method. Possible values are `evil' and `origami'.
     ;; (default 'evil)
@@ -393,7 +451,7 @@ It should only modify the values of Spacemacs settings."
     dotspacemacs-smartparens-strict-mode nil
 
     ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-    ;; over any automatically added closing parenthesis, bracket, quote, etc…
+    ;; over any automatically added closing parenthesis, bracket, quote, etc...
     ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
     dotspacemacs-smart-closing-parenthesis nil
 
@@ -404,7 +462,7 @@ It should only modify the values of Spacemacs settings."
 
     ;; If non-nil, start an Emacs server if one is not already running.
     ;; (default nil)
-    dotspacemacs-enable-server t
+    dotspacemacs-enable-server nil
 
     ;; Set the emacs server socket location.
     ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -452,14 +510,21 @@ It should only modify the values of Spacemacs settings."
     ;; (default nil)
     dotspacemacs-whitespace-cleanup 'trailing
 
-  ;; Either nil or a number of seconds. If non-nil zone out after the specified
-  ;; number of seconds. (default nil)
-  dotspacemacs-zone-out-when-idle nil
+   ;; If non nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
 
-  ;; Run `spacemacs/prettify-org-buffer' when
-  ;; visiting README.org files of Spacemacs.
-  ;; (default nil)
-  dotspacemacs-pretty-docs nil))
+   ;; Either nil or a number of seconds. If non-nil zone out after the specified
+   ;; number of seconds. (default nil)
+   dotspacemacs-zone-out-when-idle nil
+
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -475,7 +540,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-)
+  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -525,17 +590,6 @@ before packages are loaded."
   ;; (spacemacs/declare-prefix-for-mode 'org-mode "o" "custom")
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "p" 'org-latex-export-to-pdf)
 
-
-  (setq org-startup-indented t
-    org-bullets-bullet-list '(" ") ;; no bullets, needs org-bullets package
-    org-ellipsis "  " ;; folding symbol
-    org-pretty-entities t
-    org-hide-emphasis-markers t
-    ;; show actually italicized text instead of /italicized text/
-    org-agenda-block-separator ""
-    org-fontify-whole-heading-line t
-    org-fontify-done-headline t
-    org-fontify-quote-and-verse-blocks t)
 
   (setq org-babel-latex-htlatex "htlatex")
   (defmacro by-backend (&rest body)
@@ -602,17 +656,26 @@ before packages are loaded."
 
   ;; (setq helm-bibtex-bibliography '("/Users/mag/Documents/_org/bib/graph_learning.bib"))
   (setq bibtex-completion-bibliography '("/Users/mag/Documents/_org/bib/graph_learning.bib"))
+  (setq bibtex-completion-library-path '("/Users/mag/Documents/_org/papers"))
+  (setq bibtex-completion-pdf-field "file")
+  (setq bibtex-completion-notes-path "/Users/mag/Documents/_org/notes")
 
   ;; open pdf with system pdf viewer (works on mac)
   (setq bibtex-completion-pdf-open-function
     (lambda (fpath)
-      (start-process "open" "*open*" "open" fpath)))
+      (call-process "open" nil 0 nil "-a" "/Applications/Skim.app" fpath)))
+  ;; (setq bibtex-completion-pdf-open-function
+  ;;   (lambda (fpath)
+  ;;     (start-process "open" "*open*" "open" fpath)))
   ;; alternative
   ;; (setq bibtex-completion-pdf-open-function 'org-open-file)
 
 
   ;; (add-hook 'text-mode-hook
   ;; (lambda () (variable-pitch-mode 1)))
+  (add-hook 'org-mode-hook
+    (lambda () (variable-pitch-mode 1))
+    (lambda () (visual-line-mode 1)))
 
   ;;   (defconst zotxt-url-base "http://localhost:23119/zotxt")
   (eval-after-load 'org
@@ -624,21 +687,35 @@ before packages are loaded."
          '(variable-pitch ((t (:family "ETBembo" :height 180 :weight light))))
          ;; '(fixed-pitch ((t ( :family "Inconsolata" :slant normal :weight normal :height 1.0 :width normal))))
          '(fixed-pitch ((t ( :family "Hack Nerd Font" :slant normal :weight normal :height 1.0 :width normal)))))
-
        (require 'org-bullets)
+       (setq org-startup-indented t
+         visual-fill-column-mode t
+         ;; org-bullets-bullet-list '(" ") ;; no bullets, needs org-bullets package
+         org-bullets-bullet-list '("■" "◆" "▲" "▶")
+         org-ellipsis "  " ;; folding symbol
+         org-pretty-entities t
+         org-hide-emphasis-markers t
+         ;; show actually italicized text instead of /italicized text/
+         org-agenda-block-separator ""
+         org-fontify-whole-heading-line t
+         org-fontify-done-headline t
+         org-fontify-quote-and-verse-blocks t)
+
        (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-       (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
+
        ;; Activate org-zotxt-mode in org-mode buffers
        (add-hook 'org-mode-hook
-         'variable-pitch-mode
-         'visual-line-mode)
+         (lambda () (variable-pitch-mode 1))
+         (lambda () (visual-line-mode 1)))
+         ;; 'variable-pitch-mode
+         ;; 'visual-line-mode)
          ;; lambda () (org-zotxt-mode 1))
        (require 'ox)
        (setq header-line-format " ")
-       (lambda () (progn
-                    (setq left-margin-width 2)
-                    (setq right-margin-width 2)
-                    (set-window-buffer nil (current-buffer))))
+       ;; (lambda () (progn
+       ;;              (setq left-margin-width 2)
+       ;;              (setq right-margin-width 2)
+       ;;              (set-window-buffer nil (current-buffer))))
        (setq org-ref-default-bibliography "~/Documents/_org/bib/graph_learning.bib"
          bibtex-completion-pdf-field "file"
          org-ref-bibliography-notes "~/Documents/_org/paper_notes.org"
@@ -759,92 +836,73 @@ before packages are loaded."
        ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
 
 
-  (require 'xwidget)
-  (when
-    (featurep 'xwidget-internal)
-    (easy-menu-define my-xwidget-tools-menu nil "Menu for Xwidget Webkit."
-      `("Xwidget Webkit" :visible
-         (featurep 'xwidget-internal)
-         ["Browse Url ..." xwidget-webkit-browse-url :help "Ask xwidget-webkit to browse URL"]
-         ["End Edit Textarea" xwidget-webkit-end-edit-textarea :help "End editing of a webkit text area"]))
-    (easy-menu-add-item menu-bar-tools-menu nil my-xwidget-tools-menu 'separator-net)
-    (easy-menu-define my-xwidget-menu xwidget-webkit-mode-map "Menu for Xwidget Webkit."
-      '("Xwidget Webkit"
-         ["Browse Url" xwidget-webkit-browse-url :help "Ask xwidget-webkit to browse URL"]
-         ["Reload" xwidget-webkit-reload :help "Reload current url"]
-         ["Back" xwidget-webkit-back :help "Go back in history"]
-         "--"
-         ["Insert String" xwidget-webkit-insert-string :help "current webkit widget"]
-         ["End Edit Textarea" xwidget-webkit-end-edit-textarea :help "End editing of a webkit text area"]
-         "--"
-         ["Scroll Forward" xwidget-webkit-scroll-forward :help "Scroll webkit forwards"]
-         ["Scroll Backward" xwidget-webkit-scroll-backward :help "Scroll webkit backwards"]
-         "--"
-         ["Scroll Up" xwidget-webkit-scroll-up :help "Scroll webkit up"]
-         ["Scroll Down" xwidget-webkit-scroll-down :help "Scroll webkit down"]
-         "--"
-         ["Scroll Top" xwidget-webkit-scroll-top :help "Scroll webkit to the very top"]
-         ["Scroll Bottom" xwidget-webkit-scroll-bottom :help "Scroll webkit to the very bottom"]
-         "--"
-         ["Zoom In" xwidget-webkit-zoom-in :help "Increase webkit view zoom factor"]
-         ["Zoom Out" xwidget-webkit-zoom-out :help "Decrease webkit view zoom factor"]
-         "--"
-         ["Fit Width" xwidget-webkit-fit-width :help "Adjust width of webkit to window width"]
-         ["Adjust Size" xwidget-webkit-adjust-size :help "Manually set webkit size to width W, height H"]
-         ["Adjust Size Dispatch" xwidget-webkit-adjust-size-dispatch :help "Adjust size according to mode"]
-         ["Adjust Size To Content" xwidget-webkit-adjust-size-to-content :help "Adjust webkit to content size"]
-         "--"
-         ["Copy Selection As Kill" xwidget-webkit-copy-selection-as-kill :help "Get the webkit selection and put it on the kill-ring"]
-         ["Current Url" xwidget-webkit-current-url :help "Get the webkit url and place it on the kill-ring"]
-         "--"
-         ["Show Element" xwidget-webkit-show-element :help "Make webkit xwidget XW show a named element ELEMENT-SELECTOR"]
-         ["Show Id Element" xwidget-webkit-show-id-element :help "Make webkit xwidget XW show an id-element ELEMENT-ID"]
-         ["Show Id Or Named Element" xwidget-webkit-show-id-or-named-element :help "Make webkit xwidget XW show a name or element id ELEMENT-ID"]
-         ["Show Named Element" xwidget-webkit-show-named-element :help "Make webkit xwidget XW show a named element ELEMENT-NAME"]
-         "--"
-         ["Cleanup" xwidget-cleanup :help "Delete zombie xwidgets"]
-         ["Event Handler" xwidget-event-handler :help "Receive xwidget event"]
-         "--"
-         ["Xwidget Webkit Mode" xwidget-webkit-mode :style toggle :selected xwidget-webkit-mode :help "Xwidget webkit view mode"])))
+  ;; (require 'xwidget)
+  ;; (when
+  ;;   (featurep 'xwidget-internal)
+  ;;   (easy-menu-define my-xwidget-tools-menu nil "Menu for Xwidget Webkit."
+  ;;     `("Xwidget Webkit" :visible
+  ;;        (featurep 'xwidget-internal)
+  ;;        ["Browse Url ..." xwidget-webkit-browse-url :help "Ask xwidget-webkit to browse URL"]
+  ;;        ["End Edit Textarea" xwidget-webkit-end-edit-textarea :help "End editing of a webkit text area"]))
+  ;;   (easy-menu-add-item menu-bar-tools-menu nil my-xwidget-tools-menu 'separator-net)
+  ;;   (easy-menu-define my-xwidget-menu xwidget-webkit-mode-map "Menu for Xwidget Webkit."
+  ;;     '("Xwidget Webkit"
+  ;;        ["Browse Url" xwidget-webkit-browse-url :help "Ask xwidget-webkit to browse URL"]
+  ;;        ["Reload" xwidget-webkit-reload :help "Reload current url"]
+  ;;        ["Back" xwidget-webkit-back :help "Go back in history"]
+  ;;        "--"
+  ;;        ["Insert String" xwidget-webkit-insert-string :help "current webkit widget"]
+  ;;        ["End Edit Textarea" xwidget-webkit-end-edit-textarea :help "End editing of a webkit text area"]
+  ;;        "--"
+  ;;        ["Scroll Forward" xwidget-webkit-scroll-forward :help "Scroll webkit forwards"]
+  ;;        ["Scroll Backward" xwidget-webkit-scroll-backward :help "Scroll webkit backwards"]
+  ;;        "--"
+  ;;        ["Scroll Up" xwidget-webkit-scroll-up :help "Scroll webkit up"]
+  ;;        ["Scroll Down" xwidget-webkit-scroll-down :help "Scroll webkit down"]
+  ;;        "--"
+  ;;        ["Scroll Top" xwidget-webkit-scroll-top :help "Scroll webkit to the very top"]
+  ;;        ["Scroll Bottom" xwidget-webkit-scroll-bottom :help "Scroll webkit to the very bottom"]
+  ;;        "--"
+  ;;        ["Zoom In" xwidget-webkit-zoom-in :help "Increase webkit view zoom factor"]
+  ;;        ["Zoom Out" xwidget-webkit-zoom-out :help "Decrease webkit view zoom factor"]
+  ;;        "--"
+  ;;        ["Fit Width" xwidget-webkit-fit-width :help "Adjust width of webkit to window width"]
+  ;;        ["Adjust Size" xwidget-webkit-adjust-size :help "Manually set webkit size to width W, height H"]
+  ;;        ["Adjust Size Dispatch" xwidget-webkit-adjust-size-dispatch :help "Adjust size according to mode"]
+  ;;        ["Adjust Size To Content" xwidget-webkit-adjust-size-to-content :help "Adjust webkit to content size"]
+  ;;        "--"
+  ;;        ["Copy Selection As Kill" xwidget-webkit-copy-selection-as-kill :help "Get the webkit selection and put it on the kill-ring"]
+  ;;        ["Current Url" xwidget-webkit-current-url :help "Get the webkit url and place it on the kill-ring"]
+  ;;        "--"
+  ;;        ["Show Element" xwidget-webkit-show-element :help "Make webkit xwidget XW show a named element ELEMENT-SELECTOR"]
+  ;;        ["Show Id Element" xwidget-webkit-show-id-element :help "Make webkit xwidget XW show an id-element ELEMENT-ID"]
+  ;;        ["Show Id Or Named Element" xwidget-webkit-show-id-or-named-element :help "Make webkit xwidget XW show a name or element id ELEMENT-ID"]
+  ;;        ["Show Named Element" xwidget-webkit-show-named-element :help "Make webkit xwidget XW show a named element ELEMENT-NAME"]
+  ;;        "--"
+  ;;        ["Cleanup" xwidget-cleanup :help "Delete zombie xwidgets"]
+  ;;        ["Event Handler" xwidget-event-handler :help "Receive xwidget event"]
+  ;;        "--"
+  ;;        ["Xwidget Webkit Mode" xwidget-webkit-mode :style toggle :selected xwidget-webkit-mode :help "Xwidget webkit view mode"])))
 
-  (load-file "/Users/mag/.emacs.d/plugins/emacs-webkit-katex-render/webkit-katex-render.el")
-  (require 'webkit-katex-render
-    :commands (webkit-katex-render-mode)
-    ;; :init
-    ;; ;; if you use doom-emacs
-    ;; (setq webkit-katex-render--background-color (doom-color 'bg))
-    ;; ;; if you want to set a different path to the html client
-    ;; (setq webkit-katex-render--client-path "PATH/TO/CLIENT.html")
-    ;; ;; if you want to add your customized ~math-at-point~ function
-    ;; (setq webkit-katex-render--math-at-point-function 'function)
-    ;; :config
-    ;; (setq we
-    ;; bkit-katex-render--background-color (doom-color 'bg))
-    )
+  ;; (load-file "/Users/mag/.emacs.d/plugins/emacs-webkit-katex-render/webkit-katex-render.el")
+  ;; (require 'webkit-katex-render
+  ;;   :commands (webkit-katex-render-mode)
+  ;;   ;; :init
+  ;;   ;; ;; if you use doom-emacs
+  ;;   ;; (setq webkit-katex-render--background-color (doom-color 'bg))
+  ;;   ;; ;; if you want to set a different path to the html client
+  ;;   ;; (setq webkit-katex-render--client-path "PATH/TO/CLIENT.html")
+  ;;   ;; ;; if you want to add your customized ~math-at-point~ function
+  ;;   ;; (setq webkit-katex-render--math-at-point-function 'function)
+  ;;   ;; :config
+  ;;   ;; (setq we
+  ;;   ;; bkit-katex-render--background-color (doom-color 'bg))
+  ;;   )
 
   (require 'auctex-latexmk)
   (auctex-latexmk-setup)
 
-  ;; Do not write anything past this comment. This is where Emacs will
-  ;; auto-generate custom variable definitions.
   )
 
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(safe-local-variable-values '((org-confirm-babel-evaluate))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
-)
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.
