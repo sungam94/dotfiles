@@ -32,7 +32,10 @@ This function should only modify configuration layer settings."
 
     ;; List of configuration layers to load.
     dotspacemacs-configuration-layers
-    '(markdown
+    '(javascript
+       csv
+       yaml
+       markdown
        html
        ;; ----------------------------------------------------------------
        ;; Example of useful layers you may want to use right away.
@@ -42,28 +45,32 @@ This function should only modify configuration layer settings."
        auto-completion
        ;; better-defaults
        bibtex
+       (conda :variables conda-anaconda-home "/usr/local/anaconda3/bin/conda"
+         conda-env-home-directory "/usr/local/anaconda3")
        ;; (cmake :variables
-         ;; cmake-enable-cmake-ide-support t)
+       ;; cmake-enable-cmake-ide-support t)
        ;; (c-c++ :variables c-c++-enable-clang-support t
-         ;; c-c++-default-mode-for-headers 'c++-mode)
+       ;; c-c++-default-mode-for-headers 'c++-mode)
        git
        helm
-       ;; ipython-notebook
+       ipython-notebook
        ;; javascript
        (julia :variables julia-backend 'lsp)
        (latex :variables latex-enable-folding t
          latex-build-command "LatexMk"
          )
+       lsp
        ;; (markdown :variables markdown-live-preview-engine 'vmd)
        (multiple-cursors :variables multiple-cursors-backend 'evil-mc)
        org
+       osx
        pdf
        python
        ;; (shell :variables
-         ;; shell-default-height 30
-         ;; shell-default-position 'bottom)
+       ;; shell-default-height 30
+       ;; shell-default-position 'bottom)
        ;; spacemacs-navigation
-       ;; spell-checking
+       (spell-checking :variables spell-checking-enable-auto-dictionary t)
        ;; syntax-checking
        ;; theming
        themes-megapack
@@ -85,11 +92,13 @@ This function should only modify configuration layer settings."
                                         ;; elpy
                                         exec-path-from-shell
                                         ;; helm-bibtex
+                                        langtool
                                         (languagetool :variables
-                                          langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"
-                                          langtool-language-tool-jar "/Applications/TeX/LanguageTool-3.6/languagetool-commandline.jar"
-                                          langtool-language-tool-server-jar "/Applications/TeX/LanguageTool-3.6/languagetool-server.jar"
-                                          langtool-server-user-arguments '("-p" "8082"))
+                                          ;; langtool-language-tool-jar "/usr/local/Cellar/languagetool/5.0/libexec/languagetool-commandline.jar"
+                                          ;; langtool-language-tool-server-jar "/usr/local/Cellar/languagetool/5.0/libexec/languagetool-server.jar"
+                                          ;; langtool-server-user-arguments '("-p" "8082")
+                                          langtool-java-bin "/usr/bin/java"
+                                          )
                                         org-bullets
                                         posframe
                                         ;; processing-mode
@@ -433,7 +442,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -462,7 +471,7 @@ It should only modify the values of Spacemacs settings."
 
     ;; If non-nil, start an Emacs server if one is not already running.
     ;; (default nil)
-    dotspacemacs-enable-server nil
+    dotspacemacs-enable-server t
 
     ;; Set the emacs server socket location.
     ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -556,13 +565,6 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; (evil-leader/set-key
-  ;;   “q Q” ‘spacemacs/frame-killer)
-
-  (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/")
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file)
-
   ;; Load PATH variables
   (use-package exec-path-from-shell
     :custom
@@ -573,6 +575,16 @@ before packages are loaded."
       (exec-path-from-shell-initialize)))
 
   (setenv "LANG" "en_US.UTF-8")
+
+  ;; (setq python-shell-interpreter "jupyter"
+  ;;   python-shell-interpreter-args "console --simple-prompt"
+  ;;   python-shell-prompt-detect-failure-warning nil)
+  ;; (add-to-list 'python-shell-completion-native-disabled-interpreters
+  ;;   "jupyter")
+
+  (setq python-shell-interpreter "ipython"
+    python-shell-interpreter-args "-i --simple-prompt")
+
 
   ;; Enable mouse support
   (unless window-system
@@ -586,37 +598,9 @@ before packages are loaded."
                                 (scroll-up 1)))
     (defun track-mouse (e))
     (setq mouse-sel-mode t))
-
-  ;; (spacemacs/declare-prefix-for-mode 'org-mode "o" "custom")
   (spacemacs/set-leader-keys-for-major-mode 'org-mode "p" 'org-latex-export-to-pdf)
 
-
-  (setq org-babel-latex-htlatex "htlatex")
-  (defmacro by-backend (&rest body)
-    `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
-
-
-  ;; (load-file "~/.emacs.d/plugins/emacs-grammarly/emacs-grammarly.el")
-  (load-file "~/.emacs.d/plugins/academic-phrases/academic-phrases.el")
   (load-file "~/.emacs.d/plugins/calctex/calctex/calctex.el")
-
-  ;; (require 'calc-sels)
-  ;; ;; langtool
-  ;; (setq langtool-language-tool-jar "/Applications/TeX/LanguageTool-3.6/languagetool-commandline.jar")
-  ;; (setq langtool-language-tool-server-jar "/Applications/TeX/LanguageTool-3.6/languagetool-server.jar")
-  ;; (setq langtool-server-user-arguments '("-p" "8082"))
-  ;; (require 'langtool)
-  ;; (global-set-key "\C-x4w" 'langtool-check)
-  ;; (global-set-key "\C-x4W" 'langtool-check-done)
-  ;; (global-set-key "\C-x4l" 'langtool-switch-default-language)
-  ;; (global-set-key "\C-x44" 'langtool-show-message-at-point)
-  ;; (global-set-key "\C-x4c" 'langtool-correct-buffer)
-
-
-  ;; (setq-default 'preview-scale-function 1.2)
-  ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
-  ;; (setq org-format-latex-options
-  ;; (plist-put org-format-latex-options :html-scale 2.5))
 
   ;; AucTex
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
@@ -639,49 +623,70 @@ before packages are loaded."
            (mode-io-correlate
              " --synctex-forward %n:0:%b -x \"emacsclient +%{line} %{input}\"")))))
 
-
-  ;; (autoload 'helm-bibtex "helm-bibtex" "" t)
-  ;; setup pdf tool
-  ;; (use-package pdf-tools
-  ;;   :pin manual ;; manually update
-  ;;   :config
-  ;;   ;; initialise
-  ;;   (pdf-tools-install)
-  ;;   ;; open pdfs scaled to fit width
-  ;;   (setq-default pdf-view-display-size 'fit-width)
-  ;;   ;; use normal isearch
-  ;;   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-  ;;   :custom
-  ;;   (pdf-annot-activate-created-annotations t "automatically annotate highlights"))
-
   ;; (setq helm-bibtex-bibliography '("/Users/mag/Documents/_org/bib/graph_learning.bib"))
-  (setq bibtex-completion-bibliography '("/Users/mag/Documents/_org/bib/graph_learning.bib"))
+  (setq bibtex-completion-bibliography '("/Users/mag/Documents/thesis/master.bib"))
   (setq bibtex-completion-library-path '("/Users/mag/Documents/_org/papers"))
   (setq bibtex-completion-pdf-field "file")
-  (setq bibtex-completion-notes-path "/Users/mag/Documents/_org/notes")
+  (setq bibtex-completion-notes-path "/Users/mag/Documents/thesis/notes")
 
   ;; open pdf with system pdf viewer (works on mac)
   (setq bibtex-completion-pdf-open-function
     (lambda (fpath)
       (call-process "open" nil 0 nil "-a" "/Applications/Skim.app" fpath)))
-  ;; (setq bibtex-completion-pdf-open-function
-  ;;   (lambda (fpath)
-  ;;     (start-process "open" "*open*" "open" fpath)))
-  ;; alternative
-  ;; (setq bibtex-completion-pdf-open-function 'org-open-file)
-
-
-  ;; (add-hook 'text-mode-hook
-  ;; (lambda () (variable-pitch-mode 1)))
-  (add-hook 'org-mode-hook
-    (lambda () (variable-pitch-mode 1))
-    (lambda () (visual-line-mode 1)))
-
   ;;   (defconst zotxt-url-base "http://localhost:23119/zotxt")
+
+
+  (require 'auctex-latexmk)
+  (auctex-latexmk-setup)
+
+
+  ;; ORG mode stuff
   (eval-after-load 'org
-    ;; (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
-    ;; (setq org-startup-indented t) ; Enable `org-indent-mode' by default
     '(progn
+       (add-hook 'org-mode-hook
+         (lambda () (variable-pitch-mode 1))
+         (lambda () (visual-line-mode 1)))
+       ;; ORG screenshot
+       (defun my-org-screenshot ()
+         "Take a screenshot into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+         (interactive)
+         (org-display-inline-images)
+         (setq filename
+           (concat
+             (make-temp-name
+               (concat (file-name-nondirectory (buffer-file-name))
+                 "_imgs/"
+                 (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+         (unless (file-exists-p (file-name-directory filename))
+           (make-directory (file-name-directory filename)))
+                                        ; take screenshot
+         (if (eq system-type 'darwin)
+           (call-process "screencapture" nil nil nil "-i" filename))
+         (if (eq system-type 'gnu/linux)
+           (call-process "import" nil nil nil filename))
+                                        ; insert into file if correctly taken
+         (if (file-exists-p filename)
+           (insert (concat "[[file:" filename "]]"))))
+
+       ;; common settings
+       (add-to-list 'load-path "iteusr/local/share/emacs/site-lisp/")
+       (add-to-list 'load-path "~/.emacs.d/site-lisp/")
+       (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+       (load custom-file)
+
+
+
+       ;; (load-file "~/.emacs.d/plugins/emacs-grammarly/emacs-grammarly.el")
+       (load-file "~/.emacs.d/plugins/academic-phrases/academic-phrases.el")
+
+       ;; org download
+       (require  'org-download)
+
+       ;; org langtool
+       (setq langtool-language-tool-jar "/usr/local/Cellar/languagetool/5.0/libexec/languagetool-commandline.jar")
+       (require 'langtool)
+
        (custom-theme-set-faces
          'user
          '(variable-pitch ((t (:family "ETBembo" :height 180 :weight light))))
@@ -703,22 +708,27 @@ before packages are loaded."
 
        (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
+       (setq org-babel-latex-htlatex "htlatex")
+       (defmacro by-backend (&rest body)
+         `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+
+
        ;; Activate org-zotxt-mode in org-mode buffers
        (add-hook 'org-mode-hook
          (lambda () (variable-pitch-mode 1))
          (lambda () (visual-line-mode 1)))
-         ;; 'variable-pitch-mode
-         ;; 'visual-line-mode)
-         ;; lambda () (org-zotxt-mode 1))
+       ;; 'variable-pitch-mode
+       ;; 'visual-line-mode)
+       ;; lambda () (org-zotxt-mode 1))
        (require 'ox)
        (setq header-line-format " ")
        ;; (lambda () (progn
        ;;              (setq left-margin-width 2)
        ;;              (setq right-margin-width 2)
        ;;              (set-window-buffer nil (current-buffer))))
-       (setq org-ref-default-bibliography "~/Documents/_org/bib/graph_learning.bib"
+       (setq org-ref-default-bibliography "~/Documents/thesis/master.bib"
          bibtex-completion-pdf-field "file"
-         org-ref-bibliography-notes "~/Documents/_org/paper_notes.org"
+         org-ref-bibliography-notes "~/Documents/thesis/notes.org"
          org-ref-get-pdf-filename-function 'org-ref-get-zotero-pdf-filename)
 
        ;; (setq org-latex-pdf-process
@@ -735,174 +745,39 @@ before packages are loaded."
        (setq ns-use-proxy-icon nil)
        (setq frame-title-format nil)))
 
-    ;; ;; Bind something to replace the awkward C-u C-c " i
-    ;; (define-key org-mode-map
-    ;;   (kbd "C-c \" \"") (lambda () (interactive)
-    ;;                       (org-zotxt-insert-reference-link '(4))))
-    ;; ;; Change citation format to be less cumbersome in files.
-    ;; ;; You'll need to install mkbehr-short into your style manager first.
-    ;; (eval-after-load "zotxt"
-    ;;   '(setq zotxt-default-bibliography-style "mkbehr-short"))
-
-
-
-
-  ;;   ;; Bind something to replace the awkward C-u C-c " i
-  ;;   (use-package org
-  ;;     :bind (:map org-mode-map
-  ;;             ("C-c \" \"" . (lambda () (interactive) (org-zotxt-insert-reference-link '(4)))))
-
-  ;;     :config (progn
-  ;;               (org-add-link-type "mycite"
-  ;;                 (defun follow-cite (name)
-  ;;                   "Open bibliography and jump to appropriate entry.
-  ;;         The document must contain \bibliography{filename} somewhere
-  ;;         for this to work"
-  ;;                   (find-file-other-window
-  ;;                     (save-excursion
-  ;;                       (beginning-of-buffer)
-  ;;                       (save-match-data
-  ;;                         (re-search-forward "\\\\bibliography{\\([^}]+\\)}")
-  ;;                         (concat (match-string 1) ".bib"))))
-  ;;                   (beginning-of-buffer)
-  ;;                   (search-forward name))
-  ;;                 (defun export-cite (path desc format)
-  ;;                   "Export [[cite:cohen93]] as \cite{cohen93} in LaTeX."
-  ;;                   (if (eq format 'latex)
-  ;;                     (if (or (not desc) (equal 0 (search "cite:" desc)))
-  ;;                       (format "\\cite{%s}" path)
-  ;;                       (format "\\cite[%s]{%s}" desc path)))))
-
-  ;;               (defun org-ref-get-zotero-pdf-filename (key)
-  ;;                 "Return the pdf filename indicated by zotero file field.
-  ;; Argument KEY is the bibtex key."
-  ;;                 (let* ((results (org-ref-get-bibtex-key-and-file key))
-  ;;                         (bibfile (cdr results))
-  ;;                         entry)
-  ;;                   (with-temp-buffer
-  ;;                     (insert-file-contents bibfile)
-  ;;                     (bibtex-set-dialect (parsebib-find-bibtex-dialect) t)
-  ;;                     (bibtex-search-entry key nil 0)
-  ;;                     (setq entry (bibtex-parse-entry))
-  ;;                     (let ((e (org-ref-reftex-get-bib-field "file" entry)))
-  ;;                       (if (> (length e) 4)
-  ;;                         (let ((clean-field (replace-regexp-in-string "/+" "/" e)))
-  ;;                           (let ((first-file (car (split-string clean-field ";" t))))
-  ;;                             (concat org-ref-pdf-directory first-file)))
-  ;;                         (message "PDF filename not found.")
-  ;;                         )))))
-
-  ;;               ;; Override this function.
-  ;;               (defun org-ref-open-bibtex-pdf ()
-  ;;                 "Open pdf for a bibtex entry, if it exists.
-  ;; assumes point is in the entry of interest in the bibfile.  but does not check that."
-  ;;                 (interactive)
-  ;;                 (save-excursion
-  ;;                   (bibtex-beginning-of-entry)
-  ;;                   (let* ((bibtex-expand-strings t)
-  ;;                           (entry (bibtex-parse-entry t))
-  ;;                           (key (reftex-get-bib-field "=key=" entry))
-  ;;                           (pdf (org-ref-get-zotero-pdf-filename key)))
-  ;;                     (message "%s" pdf)
-  ;;                     (if (file-exists-p pdf)
-  ;;                       (org-open-link-from-string (format "[[file:%s]]" pdf))
-  ;;                       (ding)))))
-  ;;               ))
-
   ;; time mode
-
   (display-time-mode)
-
-  ;; browser eww
-  ;; (setq helm-dash-browser-func 'eww)
-
-  ;; ;; elpy
-  ;; (elpy-enable)
 
   ;; processing
   (setq processing-location "/usr/local/bin/processing-java")
   (setq processing-application-dir "/Applications/Processing.app")
   (setq processing-sketchbook-dir "~/Documents/Processing")
 
-  ;; (find-file "~/todo.org")
-
-  ;; https://raw.githubusercontent.com/emacksnotes/emacsnotes.wordpress.com/master/my-xwidget-menu.el
-
-
   (custom-set-faces
     '(company-tooltip-common
        ((t (:inherit company-tooltip :weight bold :underline nil))))
     '(company-tooltip-common-selection
        ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
-
-
-  ;; (require 'xwidget)
-  ;; (when
-  ;;   (featurep 'xwidget-internal)
-  ;;   (easy-menu-define my-xwidget-tools-menu nil "Menu for Xwidget Webkit."
-  ;;     `("Xwidget Webkit" :visible
-  ;;        (featurep 'xwidget-internal)
-  ;;        ["Browse Url ..." xwidget-webkit-browse-url :help "Ask xwidget-webkit to browse URL"]
-  ;;        ["End Edit Textarea" xwidget-webkit-end-edit-textarea :help "End editing of a webkit text area"]))
-  ;;   (easy-menu-add-item menu-bar-tools-menu nil my-xwidget-tools-menu 'separator-net)
-  ;;   (easy-menu-define my-xwidget-menu xwidget-webkit-mode-map "Menu for Xwidget Webkit."
-  ;;     '("Xwidget Webkit"
-  ;;        ["Browse Url" xwidget-webkit-browse-url :help "Ask xwidget-webkit to browse URL"]
-  ;;        ["Reload" xwidget-webkit-reload :help "Reload current url"]
-  ;;        ["Back" xwidget-webkit-back :help "Go back in history"]
-  ;;        "--"
-  ;;        ["Insert String" xwidget-webkit-insert-string :help "current webkit widget"]
-  ;;        ["End Edit Textarea" xwidget-webkit-end-edit-textarea :help "End editing of a webkit text area"]
-  ;;        "--"
-  ;;        ["Scroll Forward" xwidget-webkit-scroll-forward :help "Scroll webkit forwards"]
-  ;;        ["Scroll Backward" xwidget-webkit-scroll-backward :help "Scroll webkit backwards"]
-  ;;        "--"
-  ;;        ["Scroll Up" xwidget-webkit-scroll-up :help "Scroll webkit up"]
-  ;;        ["Scroll Down" xwidget-webkit-scroll-down :help "Scroll webkit down"]
-  ;;        "--"
-  ;;        ["Scroll Top" xwidget-webkit-scroll-top :help "Scroll webkit to the very top"]
-  ;;        ["Scroll Bottom" xwidget-webkit-scroll-bottom :help "Scroll webkit to the very bottom"]
-  ;;        "--"
-  ;;        ["Zoom In" xwidget-webkit-zoom-in :help "Increase webkit view zoom factor"]
-  ;;        ["Zoom Out" xwidget-webkit-zoom-out :help "Decrease webkit view zoom factor"]
-  ;;        "--"
-  ;;        ["Fit Width" xwidget-webkit-fit-width :help "Adjust width of webkit to window width"]
-  ;;        ["Adjust Size" xwidget-webkit-adjust-size :help "Manually set webkit size to width W, height H"]
-  ;;        ["Adjust Size Dispatch" xwidget-webkit-adjust-size-dispatch :help "Adjust size according to mode"]
-  ;;        ["Adjust Size To Content" xwidget-webkit-adjust-size-to-content :help "Adjust webkit to content size"]
-  ;;        "--"
-  ;;        ["Copy Selection As Kill" xwidget-webkit-copy-selection-as-kill :help "Get the webkit selection and put it on the kill-ring"]
-  ;;        ["Current Url" xwidget-webkit-current-url :help "Get the webkit url and place it on the kill-ring"]
-  ;;        "--"
-  ;;        ["Show Element" xwidget-webkit-show-element :help "Make webkit xwidget XW show a named element ELEMENT-SELECTOR"]
-  ;;        ["Show Id Element" xwidget-webkit-show-id-element :help "Make webkit xwidget XW show an id-element ELEMENT-ID"]
-  ;;        ["Show Id Or Named Element" xwidget-webkit-show-id-or-named-element :help "Make webkit xwidget XW show a name or element id ELEMENT-ID"]
-  ;;        ["Show Named Element" xwidget-webkit-show-named-element :help "Make webkit xwidget XW show a named element ELEMENT-NAME"]
-  ;;        "--"
-  ;;        ["Cleanup" xwidget-cleanup :help "Delete zombie xwidgets"]
-  ;;        ["Event Handler" xwidget-event-handler :help "Receive xwidget event"]
-  ;;        "--"
-  ;;        ["Xwidget Webkit Mode" xwidget-webkit-mode :style toggle :selected xwidget-webkit-mode :help "Xwidget webkit view mode"])))
-
-  ;; (load-file "/Users/mag/.emacs.d/plugins/emacs-webkit-katex-render/webkit-katex-render.el")
-  ;; (require 'webkit-katex-render
-  ;;   :commands (webkit-katex-render-mode)
-  ;;   ;; :init
-  ;;   ;; ;; if you use doom-emacs
-  ;;   ;; (setq webkit-katex-render--background-color (doom-color 'bg))
-  ;;   ;; ;; if you want to set a different path to the html client
-  ;;   ;; (setq webkit-katex-render--client-path "PATH/TO/CLIENT.html")
-  ;;   ;; ;; if you want to add your customized ~math-at-point~ function
-  ;;   ;; (setq webkit-katex-render--math-at-point-function 'function)
-  ;;   ;; :config
-  ;;   ;; (setq we
-  ;;   ;; bkit-katex-render--background-color (doom-color 'bg))
-  ;;   )
-
-  (require 'auctex-latexmk)
-  (auctex-latexmk-setup)
-
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(languagetool zenburn-theme zen-and-art-theme yasnippet-snippets yapfify yaml-mode ws-butler writeroom-mode winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon symbol-overlay sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode seti-theme scss-mode sass-mode reverse-theme reveal-in-osx-finder restart-emacs rebecca-theme rainbow-delimiters railscasts-theme pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme prettier-js posframe popwin planet-theme pippel pipenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme pcre2el password-generator paradox osx-trash osx-dictionary osx-clipboard origami orgit organic-green-theme org-superstar org-ref org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme modus-vivendi-theme modus-operandi-theme mmm-mode minimal-theme material-theme markdown-toc majapahit-theme magit-svn magit-section magit-gitflow madhat2r-theme lush-theme lsp-ui lsp-treemacs lsp-python-ms lsp-julia lorem-ipsum live-py-mode link-hint light-soap-theme launchctl langtool kaolin-themes julia-repl jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide importmagic impatient-mode hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-lsp helm-ls-git helm-gitignore helm-git-grep helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-templates gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md gandalf-theme fuzzy font-lock+ flycheck-pos-tip flx-ido flatui-theme flatland-theme farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme emmet-mode ein editorconfig dumb-jump dracula-theme dotenv-mode doom-themes django-theme diminish devdocs darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-web company-reftex company-auctex company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode chocolate-theme cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme blacken birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auctex-latexmk apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-link ace-jump-helm-line ac-ispell)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil)))))
+)

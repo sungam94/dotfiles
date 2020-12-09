@@ -41,3 +41,12 @@ export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 # fi
 export RBENV_ROOT=/usr/local/var/rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+
+export JUPYTER=/usr/local/bin/jupyter
+
+# Virtual Environment
+export WORKON_HOME=$HOME/.virtualenvs
+# export PROJECT_HOME=$HOME/projects
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+source /usr/local/bin/virtualenvwrapper.sh

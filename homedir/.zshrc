@@ -63,7 +63,6 @@ fi
 
 # source ~/.iterm2_shell_integration.`basename $SHELL`
 # source ~/.iterm2_shell_integration.zsh   # source in iterm preferences
-source /usr/local/bin/virtualenvwrapper.sh
 
 
 # Customize to your needs...
@@ -87,9 +86,10 @@ export MANPATH="/usr/local/man:$MANPATH"
 export PKG_CONFIG_PATH=/usr/local/Cellar/zlib/1.2.11/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
 
 # Virtual Environment
-# export WORKON_HOME=$HOME/.virtualenvs
+export WORKON_HOME=$HOME/.virtualenvs
 # export PROJECT_HOME=$HOME/projects
-# source /usr/local/bin/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+source /usr/local/bin/virtualenvwrapper.sh
 
 # Owner
 export USER_NAME="mag"
